@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Knowledge App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #chat-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        #user-input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        #send-button {
+            width: 100%;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Knowledge App</h1>
+    <div id="chat-container"></div>
+    <input type="text" id="user-input" placeholder="Ask a question...">
+    <button id="send-button">Send</button>
+
+    <script src="app.js"></script>
+</body>
+</html>
