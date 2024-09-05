@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "type": "podcast",
+      "name": "TechTalk",
+      "summary": "AI is transforming various industries by automating tasks and providing insights from big data.",
+      "tags": ["technology", "AI", "automation"]
+    },
+    {
+      "type": "blog",
+      "name": "FarmFuture",
+      "summary": "Modern farming techniques use IoT sensors to monitor crop health and optimize irrigation.",
+      "tags": ["agriculture", "technology", "IoT"]
+    },
+    {
+      "type": "youtube",
+      "name": "CodeMaster",
+      "summary": "App development basics include choosing a platform, designing user interface, and testing thoroughly.",
+      "tags": ["app development", "coding", "software"]
+    }
+  ]
+}
