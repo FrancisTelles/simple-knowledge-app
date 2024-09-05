@@ -5,6 +5,8 @@ const knowledgeBase = {
     "youtube": "YouTube is a video-sharing platform where users can upload, view, and interact with videos.",
     "farming": "Farming is the practice of cultivating plants and livestock for food, fiber, and other products.",
     "app development": "App development is the process of creating software applications for mobile devices or computers."
+    "agriculture": "Agriculture is the science and art of cultivating plants and livestock.",
+    "technology": "Technology is the application of scientific knowledge for practical purposes."
 };
 
 const chatContainer = document.getElementById('chat-container');
