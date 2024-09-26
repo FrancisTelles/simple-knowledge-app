@@ -3,38 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Knowledge App</title>
+    <title>AI Assistant App Mockup - Regenerative Agriculture</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f0f0f0;
         }
         #chat-container {
             border: 1px solid #ccc;
-            padding: 10px;
-            height: 300px;
+            border-radius: 10px;
+            padding: 20px;
+            height: 600px;
             overflow-y: auto;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            background-color: white;
         }
         #user-input {
-            width: 70%;
-            padding: 5px;
-            margin-right: 5px;
+            width: calc(100% - 110px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
         #send-button {
-            width: 25%;
-            padding: 5px;
+            width: 100px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #e6f3ff;
+            text-align: right;
+        }
+        .assistant-message {
+            background-color: #f0f0f0;
+        }
+        .summary {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .blinks-container {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .play-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            margin: 20px auto;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .blink {
+            margin-bottom: 20px;
+        }
+        .blink-title {
+            font-weight: bold;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Enhanced Knowledge App</h1>
+    <h1>AI Assistant: Regenerative Agriculture</h1>
     <div id="chat-container"></div>
-    <input type="text" id="user-input" placeholder="Ask about technology, agriculture, or app development...">
+    <input type="text" id="user-input" placeholder="Type your question here...">
     <button id="send-button">Send</button>
 
-    <script src="app.js"></script>
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        const sampleResponse = {
+            summary: "No-till farming is a cornerstone practice in regenerative agriculture, focusing on minimal soil disturbance to enhance soil health, promote sustainable crop production, and contribute to environmental conservation.",
+            blinks: [
+                {
+                    title: "Principles of No-Till Farming",
+                    content: "No-till farming is a cultivation method that avoids disturbing the soil through tillage. Instead of plowing fields and turning over the top layer of soil before planting, farmers using no-till techniques plant directly into the previous year's crop residue. This approach maintains the soil's natural structure, preserves organic matter, and protects the complex ecosystem of microorganisms living in the soil. By minimizing soil disturbance, no-till farming helps prevent erosion, retain moisture, and promote the natural cycling of nutrients."
+                },
+                {
+                    title: "Soil Health and Organic Matter Accumulation",
+                    content: "One of the primary benefits of no-till farming is its positive impact on soil health. By leaving crop residues on the field and not disturbing the soil, organic matter accumulates over time. This increase in organic matter improves soil structure, enhances water retention capacity, and boosts the soil's ability to store and cycle nutrients. The improved soil structure also promotes better root growth, allowing crops to access water and nutrients more efficiently. Over years of no-till practice, farmers often observe darker, more fertile topsoil with increased earthworm activity, indicating a thriving soil ecosystem."
+                },
+                {
+                    title: "Reduced Chemical Inputs and Natural Pest Control",
+                    content: "No-till farming practices can lead to a significant reduction in the need for chemical inputs over time. As soil health improves, the natural nutrient cycling processes become more efficient, reducing the need for synthetic fertilizers. Additionally, the diverse ecosystem that develops in no-till fields often promotes natural pest control. Beneficial insects and microorganisms that would be disrupted by tillage can thrive, helping to keep pest populations in check. This natural balance can decrease the reliance on pesticides, leading to more environmentally friendly and potentially cost-effective farming practices."
+                },
+                {
+                    title: "Carbon Sequestration and Climate Change Mitigation",
+                    content: "No-till farming plays a crucial role in climate change mitigation through carbon sequestration. When soil is tilled, it releases carbon dioxide into the atmosphere. In contrast, no-till practices allow carbon to be stored in the soil. As plants grow, they absorb carbon dioxide from the air and transfer some of this carbon to the soil through their roots and as they decompose. Without tillage disrupting this process, more carbon remains stored in the soil over time. This sequestration not only helps mitigate climate change but also improves soil quality, as carbon-rich soils are generally more fertile and resistant to erosion."
+                },
+                {
+                    title: "Long-Term Benefits and Challenges of No-Till Farming",
+                    content: "While the long-term benefits of no-till farming are significant, the transition can present challenges for farmers. Initially, there may be a learning curve as farmers adapt to new equipment and techniques. Some may observe a temporary yield decrease as the soil ecosystem adjusts. However, over time, many farmers report improved soil health, better crop resilience to weather extremes, and reduced operational costs due to fewer passes over the field and decreased fuel use. The economic benefits often become more pronounced as soil health improves, potentially leading to higher yields and lower input costs. It's important to note that successful no-till farming often requires a holistic approach, including thoughtful crop rotation, cover cropping, and integrated pest management strategies."
+                }
+            ]
+        };
+
+        function addMessage(message, isUser) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(isUser ? 'user-message' : 'assistant-message');
+            messageElement.textContent = message;
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(utterance);
+        }
+
+        function displayResponse(response) {
+            addMessage("Here's a summary and 5 key points about no-till farming in regenerative agriculture:", false);
+            
+            const summaryElement = document.createElement('div');
+            summaryElement.classList.add('summary');
+            summaryElement.textContent = response.summary;
+            chatContainer.appendChild(summaryElement);
+
+            const blinksContainer = document.createElement('div');
+            blinksContainer.classList.add('blinks-container');
+
+            const playButton = document.createElement('button');
+            playButton.textContent = 'Play All Blinks';
+            playButton.classList.add('play-button');
+            playButton.addEventListener('click', () => {
+                const fullText = response.blinks.map(blink => `${blink.title}. ${blink.content}`).join(' ');
+                speakText(fullText);
+            });
+
+            blinksContainer.appendChild(playButton);
+
+            response.blinks.forEach((blink, index) => {
+                const blinkElement = document.createElement('div');
+                blinkElement.classList.add('blink');
+                
+                const titleElement = document.createElement('h3');
+                titleElement.classList.add('blink-title');
+                titleElement.textContent = `${index + 1}. ${blink.title}`;
+                
+                const contentElement = document.createElement('p');
+                contentElement.textContent = blink.content;
+                
+                blinkElement.appendChild(titleElement);
+                blinkElement.appendChild(contentElement);
+                blinksContainer.appendChild(blinkElement);
+            });
+
+            chatContainer.appendChild(blinksContainer);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        sendButton.addEventListener('click', () => {
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
+                addMessage(userMessage, true);
+                userInput.value = '';
+                setTimeout(() => {
+                    displayResponse(sampleResponse);
+                }, 1000);
+            }
+        });
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+    </script>
 </body>
 </html>
