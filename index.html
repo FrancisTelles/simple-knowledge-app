@@ -3,193 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Assistant App Mockup - Regenerative Agriculture</title>
+    <title>Digs App - Regenerative Agriculture</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0a0e1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f0f0f0;
         }
-        #chat-container {
-            border: 1px solid #ccc;
-            border-radius: 10px;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .search-icon {
+            font-size: 20px;
+        }
+        .main-card {
+            background-color: #1c2333;
+            border-radius: 15px;
             padding: 20px;
-            height: 600px;
-            overflow-y: auto;
             margin-bottom: 20px;
-            background-color: white;
         }
-        #user-input {
-            width: calc(100% - 110px);
-            padding: 10px;
+        .course-title {
+            font-size: 28px;
+            font-weight: bold;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
         }
-        #send-button {
-            width: 100px;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
+        .meditation-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .begin-button {
+            background-color: #3a4356;
+            color: #ffffff;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .message {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .user-message {
-            background-color: #e6f3ff;
-            text-align: right;
-        }
-        .assistant-message {
-            background-color: #f0f0f0;
-        }
-        .summary {
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        .blinks-container {
-            background-color: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        .play-button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
+            border-radius: 20px;
             padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
             font-size: 16px;
-            margin: 20px auto;
             cursor: pointer;
-            border-radius: 5px;
         }
-        .blink {
-            margin-bottom: 20px;
+        .options-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
-        .blink-title {
+        .option-button {
+            background-color: #3a4356;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 48%;
+        }
+        .digs-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .dig {
+            background-color: #1c2333;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .dig-title {
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .source-button {
+            display: inline-block;
+            background-color: #3a4356;
+            color: #ffffff;
+            padding: 5px 10px;
+            margin-right: 5px;
+            margin-top: 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #1c2333;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .nav-item {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 12px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>AI Assistant: Regenerative Agriculture</h1>
-    <div id="chat-container"></div>
-    <input type="text" id="user-input" placeholder="Type your question here...">
-    <button id="send-button">Send</button>
+    <div class="container">
+        <header>
+            <h1>DIGS</h1>
+            <span class="search-icon">🔍</span>
+        </header>
+        
+        <div class="main-card">
+            <div class="course-title">REGENERATIVE AGRICULTURE</div>
+            <div class="meditation-info">
+                <span>Dig 1 of 5</span>
+                <span>10m 26s ✓</span>
+            </div>
+            <button class="begin-button">Begin Again</button>
+        </div>
+
+        <div class="options-container">
+            <button class="option-button" id="read-button">Read Digs</button>
+            <button class="option-button" id="listen-button">Listen to Digs</button>
+        </div>
+
+        <div class="digs-container" id="digs-container"></div>
+    </div>
+
+    <nav class="nav-bar">
+        <a href="#" class="nav-item">Home</a>
+        <a href="#" class="nav-item">Explore</a>
+        <a href="#" class="nav-item">My Library</a>
+        <a href="#" class="nav-item">More</a>
+    </nav>
 
     <script>
-        const chatContainer = document.getElementById('chat-container');
-        const userInput = document.getElementById('user-input');
-        const sendButton = document.getElementById('send-button');
+        const readButton = document.getElementById('read-button');
+        const listenButton = document.getElementById('listen-button');
+        const digsContainer = document.getElementById('digs-container');
 
         const sampleResponse = {
             summary: "No-till farming is a cornerstone practice in regenerative agriculture, focusing on minimal soil disturbance to enhance soil health, promote sustainable crop production, and contribute to environmental conservation.",
-            blinks: [
+            digs: [
                 {
                     title: "Principles of No-Till Farming",
-                    content: "No-till farming is a cultivation method that avoids disturbing the soil through tillage. Instead of plowing fields and turning over the top layer of soil before planting, farmers using no-till techniques plant directly into the previous year's crop residue. This approach maintains the soil's natural structure, preserves organic matter, and protects the complex ecosystem of microorganisms living in the soil. By minimizing soil disturbance, no-till farming helps prevent erosion, retain moisture, and promote the natural cycling of nutrients."
+                    content: "No-till farming is a cultivation method that avoids disturbing the soil through tillage. Instead of plowing fields and turning over the top layer of soil before planting, farmers using no-till techniques plant directly into the previous year's crop residue. This approach maintains the soil's natural structure, preserves organic matter, and protects the complex ecosystem of microorganisms living in the soil.",
+                    sources: ["Regenerative Ag Podcast", "Soil Health Institute"]
                 },
                 {
                     title: "Soil Health and Organic Matter Accumulation",
-                    content: "One of the primary benefits of no-till farming is its positive impact on soil health. By leaving crop residues on the field and not disturbing the soil, organic matter accumulates over time. This increase in organic matter improves soil structure, enhances water retention capacity, and boosts the soil's ability to store and cycle nutrients. The improved soil structure also promotes better root growth, allowing crops to access water and nutrients more efficiently. Over years of no-till practice, farmers often observe darker, more fertile topsoil with increased earthworm activity, indicating a thriving soil ecosystem."
+                    content: "One of the primary benefits of no-till farming is its positive impact on soil health. By leaving crop residues on the field and not disturbing the soil, organic matter accumulates over time. This increase in organic matter improves soil structure, enhances water retention capacity, and boosts the soil's ability to store and cycle nutrients.",
+                    sources: ["Dr. Elaine Ingham", "Rodale Institute"]
                 },
                 {
                     title: "Reduced Chemical Inputs and Natural Pest Control",
-                    content: "No-till farming practices can lead to a significant reduction in the need for chemical inputs over time. As soil health improves, the natural nutrient cycling processes become more efficient, reducing the need for synthetic fertilizers. Additionally, the diverse ecosystem that develops in no-till fields often promotes natural pest control. Beneficial insects and microorganisms that would be disrupted by tillage can thrive, helping to keep pest populations in check. This natural balance can decrease the reliance on pesticides, leading to more environmentally friendly and potentially cost-effective farming practices."
+                    content: "No-till farming practices can lead to a significant reduction in the need for chemical inputs over time. As soil health improves, the natural nutrient cycling processes become more efficient, reducing the need for synthetic fertilizers. Additionally, the diverse ecosystem that develops in no-till fields often promotes natural pest control.",
+                    sources: ["Gabe Brown", "Advancing Eco Agriculture"]
                 },
                 {
                     title: "Carbon Sequestration and Climate Change Mitigation",
-                    content: "No-till farming plays a crucial role in climate change mitigation through carbon sequestration. When soil is tilled, it releases carbon dioxide into the atmosphere. In contrast, no-till practices allow carbon to be stored in the soil. As plants grow, they absorb carbon dioxide from the air and transfer some of this carbon to the soil through their roots and as they decompose. Without tillage disrupting this process, more carbon remains stored in the soil over time. This sequestration not only helps mitigate climate change but also improves soil quality, as carbon-rich soils are generally more fertile and resistant to erosion."
+                    content: "No-till farming plays a crucial role in climate change mitigation through carbon sequestration. When soil is tilled, it releases carbon dioxide into the atmosphere. In contrast, no-till practices allow carbon to be stored in the soil. As plants grow, they absorb carbon dioxide from the air and transfer some of this carbon to the soil through their roots and as they decompose.",
+                    sources: ["Soil Carbon Cowboys", "Kiss the Ground"]
                 },
                 {
                     title: "Long-Term Benefits and Challenges of No-Till Farming",
-                    content: "While the long-term benefits of no-till farming are significant, the transition can present challenges for farmers. Initially, there may be a learning curve as farmers adapt to new equipment and techniques. Some may observe a temporary yield decrease as the soil ecosystem adjusts. However, over time, many farmers report improved soil health, better crop resilience to weather extremes, and reduced operational costs due to fewer passes over the field and decreased fuel use. The economic benefits often become more pronounced as soil health improves, potentially leading to higher yields and lower input costs. It's important to note that successful no-till farming often requires a holistic approach, including thoughtful crop rotation, cover cropping, and integrated pest management strategies."
+                    content: "While the long-term benefits of no-till farming are significant, the transition can present challenges for farmers. Initially, there may be a learning curve as farmers adapt to new equipment and techniques. Some may observe a temporary yield decrease as the soil ecosystem adjusts. However, over time, many farmers report improved soil health, better crop resilience to weather extremes, and reduced operational costs.",
+                    sources: ["No-Till Farmer", "Midwest Cover Crops Council"]
                 }
             ]
         };
 
-        function addMessage(message, isUser) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.classList.add(isUser ? 'user-message' : 'assistant-message');
-            messageElement.textContent = message;
-            chatContainer.appendChild(messageElement);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+        function displayDigs() {
+            digsContainer.innerHTML = '';
+            sampleResponse.digs.forEach((dig, index) => {
+                const digElement = document.createElement('div');
+                digElement.classList.add('dig');
+                
+                const titleElement = document.createElement('h3');
+                titleElement.classList.add('dig-title');
+                titleElement.textContent = `Dig ${index + 1}: ${dig.title}`;
+                
+                const contentElement = document.createElement('p');
+                contentElement.textContent = dig.content;
+                
+                const sourcesElement = document.createElement('div');
+                dig.sources.forEach(source => {
+                    const sourceButton = document.createElement('span');
+                    sourceButton.classList.add('source-button');
+                    sourceButton.textContent = source;
+                    sourcesElement.appendChild(sourceButton);
+                });
+                
+                digElement.appendChild(titleElement);
+                digElement.appendChild(contentElement);
+                digElement.appendChild(sourcesElement);
+                digsContainer.appendChild(digElement);
+            });
+            digsContainer.style.display = 'block';
         }
 
-        function speakText(text) {
-            const utterance = new SpeechSynthesisUtterance(text);
+        function speakDigs() {
+            const fullText = sampleResponse.digs.map((dig, index) => `Dig ${index + 1}: ${dig.title}. ${dig.content}`).join(' ');
+            const utterance = new SpeechSynthesisUtterance(fullText);
             speechSynthesis.speak(utterance);
         }
 
-        function displayResponse(response) {
-            addMessage("Here's a summary and 5 key points about no-till farming in regenerative agriculture:", false);
-            
-            const summaryElement = document.createElement('div');
-            summaryElement.classList.add('summary');
-            summaryElement.textContent = response.summary;
-            chatContainer.appendChild(summaryElement);
-
-            const blinksContainer = document.createElement('div');
-            blinksContainer.classList.add('blinks-container');
-
-            const playButton = document.createElement('button');
-            playButton.textContent = 'Play All Blinks';
-            playButton.classList.add('play-button');
-            playButton.addEventListener('click', () => {
-                const fullText = response.blinks.map(blink => `${blink.title}. ${blink.content}`).join(' ');
-                speakText(fullText);
-            });
-
-            blinksContainer.appendChild(playButton);
-
-            response.blinks.forEach((blink, index) => {
-                const blinkElement = document.createElement('div');
-                blinkElement.classList.add('blink');
-                
-                const titleElement = document.createElement('h3');
-                titleElement.classList.add('blink-title');
-                titleElement.textContent = `${index + 1}. ${blink.title}`;
-                
-                const contentElement = document.createElement('p');
-                contentElement.textContent = blink.content;
-                
-                blinkElement.appendChild(titleElement);
-                blinkElement.appendChild(contentElement);
-                blinksContainer.appendChild(blinkElement);
-            });
-
-            chatContainer.appendChild(blinksContainer);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        sendButton.addEventListener('click', () => {
-            const userMessage = userInput.value.trim();
-            if (userMessage) {
-                addMessage(userMessage, true);
-                userInput.value = '';
-                setTimeout(() => {
-                    displayResponse(sampleResponse);
-                }, 1000);
-            }
-        });
-
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendButton.click();
-            }
-        });
+        readButton.addEventListener('click', displayDigs);
+        listenButton.addEventListener('click', speakDigs);
     </script>
 </body>
 </html>
