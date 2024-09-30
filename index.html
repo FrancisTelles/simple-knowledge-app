@@ -97,21 +97,28 @@
             font-size: 12px;
             cursor: pointer;
         }
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #1c2333;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
+        .prompt-container {
+            margin-top: 20px;
         }
-        .nav-item {
+        .prompt-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: #1c2333;
             color: #ffffff;
-            text-decoration: none;
-            font-size: 12px;
-            text-align: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .speech-to-text-button {
+            background-color: #3a4356;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -131,6 +138,12 @@
             <button class="begin-button">Begin Again</button>
         </div>
 
+        <div class="prompt-container">
+            <input type="text" class="prompt-input" id="prompt-input" placeholder="Enter your prompt here...">
+            <button class="speech-to-text-button" id="speech-to-text-button">🎤 Speech to Text</button>
+            <button class="option-button" id="submit-button">Submit</button>
+        </div>
+
         <div class="options-container">
             <button class="option-button" id="read-button">Read Digs</button>
             <button class="option-button" id="listen-button">Listen to Digs</button>
@@ -139,17 +152,13 @@
         <div class="digs-container" id="digs-container"></div>
     </div>
 
-    <nav class="nav-bar">
-        <a href="#" class="nav-item">Home</a>
-        <a href="#" class="nav-item">Explore</a>
-        <a href="#" class="nav-item">My Library</a>
-        <a href="#" class="nav-item">More</a>
-    </nav>
-
     <script>
         const readButton = document.getElementById('read-button');
         const listenButton = document.getElementById('listen-button');
         const digsContainer = document.getElementById('digs-container');
+        const promptInput = document.getElementById('prompt-input');
+        const submitButton = document.getElementById('submit-button');
+        const speechToTextButton = document.getElementById('speech-to-text-button');
 
         const sampleResponse = {
             summary: "No-till farming is a cornerstone practice in regenerative agriculture, focusing on minimal soil disturbance to enhance soil health, promote sustainable crop production, and contribute to environmental conservation.",
@@ -217,8 +226,40 @@
             speechSynthesis.speak(utterance);
         }
 
+        function submitPrompt() {
+            const prompt = promptInput.value;
+            console.log('Submitted prompt:', prompt);
+            // Here you would typically send the prompt to your backend or AI service
+            // For now, we'll just log it to the console
+            alert('Prompt submitted: ' + prompt);
+        }
+
+        function startSpeechToText() {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    promptInput.value = transcript;
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    alert('Speech recognition error: ' + event.error);
+                };
+
+                recognition.start();
+            } else {
+                alert('Speech recognition is not supported in your browser.');
+            }
+        }
+
         readButton.addEventListener('click', displayDigs);
         listenButton.addEventListener('click', speakDigs);
+        submitButton.addEventListener('click', submitPrompt);
+        speechToTextButton.addEventListener('click', startSpeechToText);
     </script>
 </body>
 </html>
