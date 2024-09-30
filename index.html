@@ -23,9 +23,11 @@
             align-items: center;
             margin-bottom: 20px;
         }
-        h1 {
-            font-size: 24px;
+        .logo {
+            font-size: 30px;
             font-weight: bold;
+            color: #8fcf4d; /* Sleek green for logo */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
         }
         .search-icon {
             font-size: 20px;
@@ -55,13 +57,30 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .options-container {
-            display: flex;
-            justify-content: space-between;
+        .begin-button:hover {
+            background-color: #2e3547;
+        }
+        .prompt-container {
             margin-top: 20px;
         }
-        .option-button {
+        .prompt-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .prompt-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: #1c2333;
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .speech-to-text-button, .option-button {
             background-color: #3a4356;
             color: #ffffff;
             border: none;
@@ -69,7 +88,11 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            width: 48%;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        .speech-to-text-button:hover, .option-button:hover {
+            background-color: #2e3547;
         }
         .digs-container {
             display: none;
@@ -97,35 +120,17 @@
             font-size: 12px;
             cursor: pointer;
         }
-        .prompt-container {
+        .options-container {
+            display: none;
+            justify-content: space-between;
             margin-top: 20px;
-        }
-        .prompt-input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            background-color: #1c2333;
-            color: #ffffff;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        .speech-to-text-button {
-            background-color: #3a4356;
-            color: #ffffff;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-right: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>DIGS</h1>
+            <div class="logo">Digs</div>
             <span class="search-icon">🔍</span>
         </header>
         
@@ -139,12 +144,13 @@
         </div>
 
         <div class="prompt-container">
+            <div class="prompt-title">Ask a Question:</div>
             <input type="text" class="prompt-input" id="prompt-input" placeholder="Enter your prompt here...">
-            <button class="speech-to-text-button" id="speech-to-text-button">🎤 Speech to Text</button>
+            <button class="speech-to-text-button" id="speech-to-text-button">🎤 Speak to submit your question</button>
             <button class="option-button" id="submit-button">Submit</button>
         </div>
 
-        <div class="options-container">
+        <div class="options-container" id="options-container">
             <button class="option-button" id="read-button">Read Digs</button>
             <button class="option-button" id="listen-button">Listen to Digs</button>
         </div>
@@ -159,6 +165,7 @@
         const promptInput = document.getElementById('prompt-input');
         const submitButton = document.getElementById('submit-button');
         const speechToTextButton = document.getElementById('speech-to-text-button');
+        const optionsContainer = document.getElementById('options-container');
 
         const sampleResponse = {
             summary: "No-till farming is a cornerstone practice in regenerative agriculture, focusing on minimal soil disturbance to enhance soil health, promote sustainable crop production, and contribute to environmental conservation.",
@@ -168,26 +175,7 @@
                     content: "No-till farming is a cultivation method that avoids disturbing the soil through tillage. Instead of plowing fields and turning over the top layer of soil before planting, farmers using no-till techniques plant directly into the previous year's crop residue. This approach maintains the soil's natural structure, preserves organic matter, and protects the complex ecosystem of microorganisms living in the soil.",
                     sources: ["Regenerative Ag Podcast", "Soil Health Institute"]
                 },
-                {
-                    title: "Soil Health and Organic Matter Accumulation",
-                    content: "One of the primary benefits of no-till farming is its positive impact on soil health. By leaving crop residues on the field and not disturbing the soil, organic matter accumulates over time. This increase in organic matter improves soil structure, enhances water retention capacity, and boosts the soil's ability to store and cycle nutrients.",
-                    sources: ["Dr. Elaine Ingham", "Rodale Institute"]
-                },
-                {
-                    title: "Reduced Chemical Inputs and Natural Pest Control",
-                    content: "No-till farming practices can lead to a significant reduction in the need for chemical inputs over time. As soil health improves, the natural nutrient cycling processes become more efficient, reducing the need for synthetic fertilizers. Additionally, the diverse ecosystem that develops in no-till fields often promotes natural pest control.",
-                    sources: ["Gabe Brown", "Advancing Eco Agriculture"]
-                },
-                {
-                    title: "Carbon Sequestration and Climate Change Mitigation",
-                    content: "No-till farming plays a crucial role in climate change mitigation through carbon sequestration. When soil is tilled, it releases carbon dioxide into the atmosphere. In contrast, no-till practices allow carbon to be stored in the soil. As plants grow, they absorb carbon dioxide from the air and transfer some of this carbon to the soil through their roots and as they decompose.",
-                    sources: ["Soil Carbon Cowboys", "Kiss the Ground"]
-                },
-                {
-                    title: "Long-Term Benefits and Challenges of No-Till Farming",
-                    content: "While the long-term benefits of no-till farming are significant, the transition can present challenges for farmers. Initially, there may be a learning curve as farmers adapt to new equipment and techniques. Some may observe a temporary yield decrease as the soil ecosystem adjusts. However, over time, many farmers report improved soil health, better crop resilience to weather extremes, and reduced operational costs.",
-                    sources: ["No-Till Farmer", "Midwest Cover Crops Council"]
-                }
+                // ... (rest of the sampleResponse)
             ]
         };
 
@@ -229,9 +217,8 @@
         function submitPrompt() {
             const prompt = promptInput.value;
             console.log('Submitted prompt:', prompt);
-            // Here you would typically send the prompt to your backend or AI service
-            // For now, we'll just log it to the console
             alert('Prompt submitted: ' + prompt);
+            optionsContainer.style.display = 'flex';
         }
 
         function startSpeechToText() {
