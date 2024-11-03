@@ -1,68 +1,132 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Volume2, Mic, Send } from 'lucide-react';
+import { Volume2, Mic, Send, ChevronLeft, ChevronRight, Pause } from 'lucide-react';
 
 const DigsApp = () => {
   const [question, setQuestion] = useState('');
-  const [currentDig, setCurrentDig] = useState(null);
+  const [currentDigIndex, setCurrentDigIndex] = useState(0);
   const [isAudioMode, setIsAudioMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showDigs, setShowDigs] = useState(false);
+  const audioRef = useRef(null);
 
-  // Example digs for "What is no-till farming?"
+  // Enhanced sample data with navigation
   const sampleDigs = [
     {
       id: 1,
       text: "No-till farming is an agricultural technique where crops are grown without disturbing the soil through tillage. This means the soil is left intact and crop residue is left on the field after harvesting.",
-      audioUrl: "/path-to-your-audio-file.wav"
+      audioUrl: "/audio/no-till-1.wav"
     },
     {
       id: 2,
       text: "Traditional farming involves plowing fields, which can lead to soil erosion and loss of organic matter. No-till farming preserves soil structure and promotes healthy soil biology.",
-      audioUrl: "/path-to-your-audio-file.wav"
+      audioUrl: "/audio/no-till-2.wav"
     },
     {
       id: 3,
       text: "Benefits of no-till farming include improved soil health, reduced erosion, better water retention, and decreased fuel and labor costs. It also helps sequester carbon in the soil.",
-      audioUrl: "/path-to-your-audio-file.wav"
+      audioUrl: "/audio/no-till-3.wav"
     },
     {
       id: 4,
       text: "Challenges of no-till farming can include initial equipment costs, potential increased herbicide use, and slower soil warming in spring. However, many farmers find the long-term benefits outweigh these challenges.",
-      audioUrl: "/path-to-your-audio-file.wav"
+      audioUrl: "/audio/no-till-4.wav"
     },
     {
       id: 5,
       text: "No-till farming is becoming increasingly popular worldwide as a sustainable agricultural practice. It's part of a broader movement toward regenerative agriculture that focuses on soil health and ecosystem restoration.",
-      audioUrl: "/path-to-your-audio-file.wav"
+      audioUrl: "/audio/no-till-5.wav"
     }
   ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real app, this would fetch from an API
-    setCurrentDig(sampleDigs[0]);
+    setShowDigs(true);
+    setCurrentDigIndex(0);
+    if (isAudioMode) {
+      playAudio();
+    }
   };
 
   const handleVoiceInput = () => {
     setIsRecording(!isRecording);
-    // In a real app, this would handle voice recording
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new window.webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setQuestion(transcript);
+        setIsRecording(false);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsRecording(false);
+      };
+
+      recognition.start();
+    } else {
+      alert('Speech recognition is not supported in this browser.');
+      setIsRecording(false);
+    }
   };
 
   const handleAudioToggle = () => {
     setIsAudioMode(!isAudioMode);
+    if (isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    }
   };
+
+  const playAudio = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const handleNextDig = () => {
+    if (currentDigIndex < sampleDigs.length - 1) {
+      setCurrentDigIndex(currentDigIndex + 1);
+      if (isAudioMode && isPlaying) {
+        audioRef.current?.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
+
+  const handlePreviousDig = () => {
+    if (currentDigIndex > 0) {
+      setCurrentDigIndex(currentDigIndex - 1);
+      if (isAudioMode && isPlaying) {
+        audioRef.current?.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
+
+  const currentDig = sampleDigs[currentDigIndex];
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <div className="text-3xl font-bold mb-8 text-center">
-        <span className="text-green-600">Digs</span>
+      <div className="text-4xl font-bold mb-8 text-center">
+        <span style={{ color: '#2B5C3B' }}>Digs</span>
       </div>
 
-      <Card className="mb-8">
+      <Card className="mb-8 bg-white shadow-lg">
         <CardContent className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-center">
+          <h2 className="text-2xl font-semibold mb-6 text-center" style={{ color: '#2B5C3B' }}>
             REGENERATIVE AGRICULTURE
           </h2>
 
@@ -73,30 +137,63 @@ const DigsApp = () => {
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="What is no-till farming?"
               className="flex-1"
+              style={{ borderColor: '#2B5C3B' }}
             />
-            <Button onClick={handleVoiceInput} variant="outline" type="button">
-              <Mic className={isRecording ? "text-red-500" : ""} />
+            <Button 
+              onClick={handleVoiceInput} 
+              variant="outline" 
+              type="button"
+              style={{ borderColor: '#2B5C3B', color: isRecording ? '#ff0000' : '#2B5C3B' }}
+            >
+              <Mic />
             </Button>
-            <Button type="submit">
+            <Button 
+              type="submit"
+              style={{ backgroundColor: '#2B5C3B', color: 'white' }}
+            >
               <Send className="h-4 w-4" />
             </Button>
           </form>
 
-          {currentDig && (
+          {showDigs && currentDig && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">Dig {currentDig.id} of 5</h3>
-                <Button
-                  variant="ghost"
-                  onClick={handleAudioToggle}
-                  className={isAudioMode ? "text-green-600" : ""}
-                >
-                  <Volume2 className="h-5 w-5" />
-                </Button>
+                <h3 className="text-lg font-medium" style={{ color: '#2B5C3B' }}>
+                  Dig {currentDig.id} of 5
+                </h3>
+                {isAudioMode && (
+                  <Button
+                    variant="ghost"
+                    onClick={playAudio}
+                    style={{ color: '#2B5C3B' }}
+                  >
+                    {isPlaying ? <Pause className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+                  </Button>
+                )}
               </div>
               <p className="text-gray-700 leading-relaxed">
                 {currentDig.text}
               </p>
+              <div className="flex justify-between mt-4">
+                <Button
+                  variant="ghost"
+                  onClick={handlePreviousDig}
+                  disabled={currentDigIndex === 0}
+                  style={{ color: '#2B5C3B' }}
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                  Previous
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={handleNextDig}
+                  disabled={currentDigIndex === sampleDigs.length - 1}
+                  style={{ color: '#2B5C3B' }}
+                >
+                  Next
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
@@ -107,6 +204,11 @@ const DigsApp = () => {
           variant="outline"
           onClick={() => setIsAudioMode(false)}
           className={!isAudioMode ? "bg-green-50" : ""}
+          style={{ 
+            borderColor: '#2B5C3B', 
+            color: '#2B5C3B',
+            backgroundColor: !isAudioMode ? '#E8F5E9' : 'transparent'
+          }}
         >
           Read Digs
         </Button>
@@ -114,10 +216,22 @@ const DigsApp = () => {
           variant="outline"
           onClick={() => setIsAudioMode(true)}
           className={isAudioMode ? "bg-green-50" : ""}
+          style={{ 
+            borderColor: '#2B5C3B', 
+            color: '#2B5C3B',
+            backgroundColor: isAudioMode ? '#E8F5E9' : 'transparent'
+          }}
         >
           Listen to Digs
         </Button>
       </div>
+
+      {/* Hidden audio element for playback */}
+      <audio
+        ref={audioRef}
+        src={currentDig?.audioUrl}
+        onEnded={() => setIsPlaying(false)}
+      />
     </div>
   );
 };
